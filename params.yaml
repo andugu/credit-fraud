@@ -1,4 +1,5 @@
 prepare:
   data_path: 'data/creditcard.csv'
+  archive_path: 'data/archive.zip'
 feature_engenc:
   encoder_path: 'models/encoder.pkl'

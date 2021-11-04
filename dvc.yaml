@@ -3,7 +3,7 @@ stages:
     cmd: PYTHONPATH=. python3 credit_card_pipeline/scripts/prepare.py
     deps:
     - credit_card_pipeline/scripts/prepare.py
-    - data/creditcard.csv
+    - data/archive.zip
     params:
     - prepare.data_path
     outs:

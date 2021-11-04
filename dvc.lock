@@ -4,8 +4,11 @@ stages:
     cmd: PYTHONPATH=. python3 credit_card_pipeline/scripts/prepare.py
     deps:
     - path: credit_card_pipeline/scripts/prepare.py
-      md5: f526278db3d242d07faab990da9d5867
-      size: 367
+      md5: badc46dd0991282139cd495395651993
+      size: 556
+    - path: data/archive.zip
+      md5: bf8e9842731ab6f9b8ab51e1a6741f8b
+      size: 69155672
     params:
       params.yaml:
         prepare.data_path: data/creditcard.csv
@@ -19,6 +22,9 @@ stages:
     - path: credit_card_pipeline/scripts/feature_engenc.py
       md5: d8e773a59778f99150e0e39ab596b30b
       size: 1275
+    - path: data/prepared.pkl
+      md5: c296f17cf08c47dc8afed08a73b6f395
+      size: 70633290
     params:
       params.yaml:
         feature_engenc.encoder_path: models/encoder.pkl
