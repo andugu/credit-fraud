@@ -10,6 +10,14 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 
 
+def get_confusion_coefs(y_pred, y_actual):
+    y_pred = np.round(y_pred)
+    cf = confusion_matrix(y_actual, y_pred)
+    tnr = cf[0][0] / (cf[0][0]+cf[1][0])
+    tpr = cf[1][1] / (cf[1][1]+cf[0][1])
+    return tpr, tnr
+
+
 def optimize_classifier(train, init_points, n_iter, cv, stratified, shuffle, num_boost_round, balanced):
 
     bounds = {'max_depth': (4, 10),
@@ -113,13 +121,7 @@ def main():
     train_score = model.eval(train_data)
     test_score = model.eval(test_data)
 
-    # TPR and TNR of testing data
-    y_prob = model.predict(test_data)
-    # Get concrete prediction
-    y_prob = np.round(y_prob)
-    cf = confusion_matrix(y_test, y_prob)
-    tnr = cf[0][0] / (cf[0][0]+cf[1][0])
-    tpr = cf[1][1] / (cf[1][1]+cf[0][1])
+    tpr, tnr = get_confusion_coefs(model.predict(test_data), y_train)
 
     # Dump Metrics
     results = {
