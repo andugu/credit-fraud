@@ -1,0 +1,21 @@
+stages:
+  prepare:
+    cmd: PYTHONPATH=. python3 credit_card_pipeline/scripts/prepare.py
+    deps:
+    - credit_card_pipeline/scripts/prepare.py
+    - data/creditcard.csv
+    params:
+    - prepare.data_path
+    outs:
+    - data/prepared.pkl
+  feature_engenc:
+    cmd: PYTHONPATH=. python3 credit_card_pipeline/scripts/feature_engenc.py
+    deps:
+    - credit_card_pipeline/scripts/feature_engenc.py
+    - data/prepared.pkl
+    params:
+    - feature_engenc.encoder_path
+    outs:
+    - data/features.pkl
+    - data/labels.pkl
+    - models/encoder.pkl
