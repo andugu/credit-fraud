@@ -27,7 +27,7 @@ stages:
       size: 70633290
     params:
       params.yaml:
-        feature_engenc.encoder_path: models/encoder.pkl
+        feature_engenc.encoder_path: pickles/encoder.pkl
     outs:
     - path: data/features.pkl
       md5: b3e3031a11f099f19f73e350e9680b93
@@ -35,15 +35,15 @@ stages:
     - path: data/labels.pkl
       md5: 77b05e90588b603069a70d47269b4b3f
       size: 2279064
-    - path: models/encoder.pkl
+    - path: pickles/encoder.pkl
       md5: c829e8db11bc900014658700d3843ae3
       size: 1638
   train:
     cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/train.py
     deps:
     - path: credit_fraud_pipeline/scripts/train.py
-      md5: 14b1c90be4a5751902cdc0debc6a8189
-      size: 5171
+      md5: b292cf5658136faa186bfe02ffaa62c9
+      size: 6608
     - path: data/features.pkl
       md5: b3e3031a11f099f19f73e350e9680b93
       size: 68354679
@@ -53,17 +53,17 @@ stages:
     params:
       params.yaml:
         train.balanced: false
-        train.cv: 5
-        train.init_points: 3
-        train.n_iter: 10
+        train.cv: 3
+        train.init_points: 4
+        train.n_iter: 30
         train.num_boost_round: 100
         train.shuffle: true
         train.stratified: true
-        train.test_size: 0.2
+        train.test_size: 0.3
     outs:
-    - path: models/metrics.json
-      md5: 2ecf9e7473ec567ca012514534ded31c
-      size: 116
-    - path: models/model.pkl
-      md5: dd465661d1511ed9b88398d78a55e9e0
-      size: 147537
+    - path: pickles/metrics.json
+      md5: 1fd9ad4ac0a17b8ad2eb66d4ed2c59fb
+      size: 298
+    - path: pickles/model.pkl
+      md5: b2c70a501bad1ef7dfeb7ae9c9ac77ce
+      size: 184357

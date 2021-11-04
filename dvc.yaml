@@ -18,7 +18,7 @@ stages:
     outs:
     - data/features.pkl
     - data/labels.pkl
-    - models/encoder.pkl
+    - pickles/encoder.pkl
   train:
     cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/train.py
     deps:
@@ -35,7 +35,7 @@ stages:
     - train.balanced
     - train.num_boost_round
     outs:
-    - models/model.pkl
+    - pickles/model.pkl
     metrics:
-    - models/metrics.json:
+    - pickles/metrics.json:
         cache: false
