@@ -8,6 +8,13 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 def feature_transformation(data: pd.DataFrame, encoder_path: str) -> pd.DataFrame:
+    """ Performs scaling over the middle columns of the dataframe.
+    Looks for a trained encoder in the encoder_path and loads it if it exists. Otherwise it trains one.
+    This way we can easily use this function on deployment
+    :param data: pd.DataFrame
+    :param encoder_path: str, path to the encoder
+    :return data: pd.DataFrame, scaled dataframe
+    """
     columns = data.columns[1:-1].to_list()
     if os.path.exists(encoder_path):
         encoder = pickle.load(open(encoder_path, 'rb'))

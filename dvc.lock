@@ -1,9 +1,9 @@
 schema: '2.0'
 stages:
   prepare:
-    cmd: PYTHONPATH=. python3 credit_card_pipeline/scripts/prepare.py
+    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/prepare.py
     deps:
-    - path: credit_card_pipeline/scripts/prepare.py
+    - path: credit_fraud_pipeline/scripts/prepare.py
       md5: badc46dd0991282139cd495395651993
       size: 556
     - path: data/archive.zip
@@ -17,11 +17,11 @@ stages:
       md5: c296f17cf08c47dc8afed08a73b6f395
       size: 70633290
   feature_engenc:
-    cmd: PYTHONPATH=. python3 credit_card_pipeline/scripts/feature_engenc.py
+    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/feature_engenc.py
     deps:
-    - path: credit_card_pipeline/scripts/feature_engenc.py
-      md5: d8e773a59778f99150e0e39ab596b30b
-      size: 1275
+    - path: credit_fraud_pipeline/scripts/feature_engenc.py
+      md5: 66be941b80e76c3a0076447bcbe1a247
+      size: 1642
     - path: data/prepared.pkl
       md5: c296f17cf08c47dc8afed08a73b6f395
       size: 70633290
@@ -38,3 +38,32 @@ stages:
     - path: models/encoder.pkl
       md5: c829e8db11bc900014658700d3843ae3
       size: 1638
+  train:
+    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/train.py
+    deps:
+    - path: credit_fraud_pipeline/scripts/train.py
+      md5: 14b1c90be4a5751902cdc0debc6a8189
+      size: 5171
+    - path: data/features.pkl
+      md5: b3e3031a11f099f19f73e350e9680b93
+      size: 68354679
+    - path: data/labels.pkl
+      md5: 77b05e90588b603069a70d47269b4b3f
+      size: 2279064
+    params:
+      params.yaml:
+        train.balanced: false
+        train.cv: 5
+        train.init_points: 3
+        train.n_iter: 10
+        train.num_boost_round: 100
+        train.shuffle: true
+        train.stratified: true
+        train.test_size: 0.2
+    outs:
+    - path: models/metrics.json
+      md5: 2ecf9e7473ec567ca012514534ded31c
+      size: 116
+    - path: models/model.pkl
+      md5: dd465661d1511ed9b88398d78a55e9e0
+      size: 147537
