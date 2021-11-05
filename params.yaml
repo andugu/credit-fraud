@@ -13,4 +13,4 @@ train:
   shuffle: True
   balanced: False
   num_boost_round: 100
-  scale_pos_weight: 1
+  scale_pos_weight: 100
