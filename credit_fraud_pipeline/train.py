@@ -84,7 +84,6 @@ def optimize_classifier(train, init_points, n_iter, cv, stratified, shuffle, num
                    'subsample': optimizer.max['params']['subsample'],
                    'colsample_bytree': optimizer.max['params']['colsample_bytree'],
                    'learning_rate': optimizer.max['params']['learning_rate'],
-                   'num_class': None,
                    'verbosity': 0,
                    'n_jobs': -1,
                    'use_label_encoder': False
@@ -128,7 +127,8 @@ def main():
     model = xgb.train(best_parameters, train_data, num_boost_round=num_boost_round,
                       evals=[(train_data, 'train'), (test_data, 'test')], verbose_eval=False)
     # Save Model
-    pickle.dump(model, open('pickles/model.pkl', 'wb'))
+    with open('pickles/model.pkl', 'wb') as file:
+        pickle.dump(model, file)
 
     # AUC
     train_score = model.eval(train_data)
@@ -157,7 +157,8 @@ def main():
         'val-tnr': val_tnr,
         'val-recall': val_recall
     }
-    json.dump(results, open('pickles/metrics.json', 'w'), indent=4)
+    with open('pickles/metrics.json', 'w') as file:
+        json.dump(results, file, indent=4)
 
 
 if __name__ == '__main__':

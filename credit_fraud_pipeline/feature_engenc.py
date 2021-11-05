@@ -2,30 +2,28 @@
 
 import yaml
 import pandas as pd
-import os
 import pickle
 from sklearn.preprocessing import MinMaxScaler
+from typing import Tuple, Union
 
 
-def feature_transformation(data: pd.DataFrame, encoder_path: str) -> pd.DataFrame:
+def feature_transformation(data: pd.DataFrame, encoder=None) -> Union[pd.DataFrame, Tuple[pd.DataFrame, object]]:
     """ Performs scaling over the middle columns of the dataframe.
     Looks for a trained encoder in the encoder_path and loads it if it exists. Otherwise it trains one.
     This way we can easily use this function on deployment
     :param data: pd.DataFrame
-    :param encoder_path: str, path to the encoder
+    :param encoder: MinMaxScaler
     :return data: pd.DataFrame, scaled dataframe
+    :return encoder: MinMaxScaler, optional
     """
     columns = data.columns[1:-1].to_list()
-    if os.path.exists(encoder_path):
-        encoder = pickle.load(open(encoder_path, 'rb'))
+    if encoder is not None:
         data[columns] = encoder.transform(data[columns])
+        return data
     else:
         encoder = MinMaxScaler().fit(data[columns])
         data[columns] = encoder.transform(data[columns])
-        # Dump encoder for API usage
-        pickle.dump(encoder, open(encoder_path, 'wb'))
-
-    return data
+        return data, encoder
 
 
 def main():
@@ -40,14 +38,13 @@ def main():
     features = data.drop(columns='Class')
     labels = data['Class']
 
-    # Remove encoder if exists
-    if os.path.exists(encoder_path):
-        os.remove(encoder_path)
     # Feature transformations
-    features = feature_transformation(features, encoder_path)
+    features, encoder = feature_transformation(features)
 
     features.to_pickle('data/features.pkl')
     labels.to_pickle('data/labels.pkl')
+    with open(encoder_path, 'wb') as file:
+        pickle.dump(encoder, file)
 
 
 if __name__ == '__main__':

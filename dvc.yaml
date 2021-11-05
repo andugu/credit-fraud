@@ -1,17 +1,17 @@
 stages:
   prepare:
-    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/prepare.py
+    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/prepare.py
     deps:
-    - credit_fraud_pipeline/scripts/prepare.py
+    - credit_fraud_pipeline/prepare.py
     - data/archive.zip
     params:
     - prepare.data_path
     outs:
     - data/prepared.pkl
   feature_engenc:
-    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/feature_engenc.py
+    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/feature_engenc.py
     deps:
-    - credit_fraud_pipeline/scripts/feature_engenc.py
+    - credit_fraud_pipeline/feature_engenc.py
     - data/prepared.pkl
     params:
     - feature_engenc.encoder_path
@@ -20,9 +20,9 @@ stages:
     - data/labels.pkl
     - pickles/encoder.pkl
   train:
-    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/train.py
+    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/train.py
     deps:
-    - credit_fraud_pipeline/scripts/train.py
+    - credit_fraud_pipeline/train.py
     - data/features.pkl
     - data/labels.pkl
     params:
@@ -39,3 +39,16 @@ stages:
     metrics:
     - pickles/metrics.json:
         cache: false
+  pack:
+    cmd: PYTHONPATH=. python3 credit_fraud_serving/packer.py
+    deps:
+    - credit_fraud_serving/packer.py
+    - credit_fraud_serving/service.py
+    - pickles/model.pkl
+    - pickles/encoder.pkl
+    outs:
+    - bentoml
+  serve:
+    cmd: bentoml serve bentoml/FraudClassifier --port 8000
+    deps:
+    - bentoml

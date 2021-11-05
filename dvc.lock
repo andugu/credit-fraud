@@ -42,8 +42,8 @@ stages:
     cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/train.py
     deps:
     - path: credit_fraud_pipeline/scripts/train.py
-      md5: b292cf5658136faa186bfe02ffaa62c9
-      size: 6608
+      md5: 2f2a1d30156dba1ef8a4c1c521076ce8
+      size: 6624
     - path: data/features.pkl
       md5: b3e3031a11f099f19f73e350e9680b93
       size: 68354679
@@ -55,15 +55,15 @@ stages:
         train.balanced: false
         train.cv: 3
         train.init_points: 4
-        train.n_iter: 30
-        train.num_boost_round: 100
+        train.n_iter: 20
+        train.num_boost_round: 200
         train.shuffle: true
         train.stratified: true
         train.test_size: 0.3
     outs:
     - path: pickles/metrics.json
-      md5: 1fd9ad4ac0a17b8ad2eb66d4ed2c59fb
+      md5: 55db0306071b89f2a84f322eec008d7a
       size: 298
     - path: pickles/model.pkl
-      md5: b2c70a501bad1ef7dfeb7ae9c9ac77ce
-      size: 184357
+      md5: b8af3274cd654608f3d06f2adae7809f
+      size: 494315
