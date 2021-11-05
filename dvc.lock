@@ -1,9 +1,9 @@
 schema: '2.0'
 stages:
   prepare:
-    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/prepare.py
+    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/prepare.py
     deps:
-    - path: credit_fraud_pipeline/scripts/prepare.py
+    - path: credit_fraud_pipeline/prepare.py
       md5: badc46dd0991282139cd495395651993
       size: 556
     - path: data/archive.zip
@@ -17,11 +17,11 @@ stages:
       md5: c296f17cf08c47dc8afed08a73b6f395
       size: 70633290
   feature_engenc:
-    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/feature_engenc.py
+    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/feature_engenc.py
     deps:
-    - path: credit_fraud_pipeline/scripts/feature_engenc.py
-      md5: 66be941b80e76c3a0076447bcbe1a247
-      size: 1642
+    - path: credit_fraud_pipeline/feature_engenc.py
+      md5: 37fba00b729e6dc66904eded73afd182
+      size: 1570
     - path: data/prepared.pkl
       md5: c296f17cf08c47dc8afed08a73b6f395
       size: 70633290
@@ -39,9 +39,9 @@ stages:
       md5: c829e8db11bc900014658700d3843ae3
       size: 1638
   train:
-    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/scripts/train.py
+    cmd: PYTHONPATH=. python3 credit_fraud_pipeline/train.py
     deps:
-    - path: credit_fraud_pipeline/scripts/train.py
+    - path: credit_fraud_pipeline/train.py
       md5: 2f2a1d30156dba1ef8a4c1c521076ce8
       size: 6624
     - path: data/features.pkl
@@ -56,14 +56,34 @@ stages:
         train.cv: 3
         train.init_points: 4
         train.n_iter: 20
-        train.num_boost_round: 200
+        train.num_boost_round: 300
         train.shuffle: true
         train.stratified: true
         train.test_size: 0.3
     outs:
     - path: pickles/metrics.json
-      md5: 55db0306071b89f2a84f322eec008d7a
-      size: 298
+      md5: b26fad64c03bc4750f53d430bdbe2ff3
+      size: 303
     - path: pickles/model.pkl
-      md5: b8af3274cd654608f3d06f2adae7809f
-      size: 494315
+      md5: bc1f336de37633c769248a53e8590938
+      size: 820501
+  pack:
+    cmd: PYTHONPATH=. python3 credit_fraud_serving/packer.py
+    deps:
+    - path: credit_fraud_serving/packer.py
+      md5: c6980319d706abcf89c5c7759820defb
+      size: 664
+    - path: credit_fraud_serving/service.py
+      md5: 9c3bfd956cd114557e85cdc6d2532be2
+      size: 690
+    - path: pickles/encoder.pkl
+      md5: c829e8db11bc900014658700d3843ae3
+      size: 1638
+    - path: pickles/model.pkl
+      md5: bc1f336de37633c769248a53e8590938
+      size: 820501
+    outs:
+    - path: bentoml
+      md5: 0f85cbec937028f04866df61277b4f47.dir
+      size: 431888
+      nfiles: 19
