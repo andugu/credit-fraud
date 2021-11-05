@@ -1,5 +1,4 @@
 # Feature Engineering & Encoding
-
 import yaml
 import pandas as pd
 import pickle
@@ -9,8 +8,7 @@ from typing import Tuple, Union
 
 def feature_transformation(data: pd.DataFrame, encoder=None) -> Union[pd.DataFrame, Tuple[pd.DataFrame, object]]:
     """ Performs scaling over the middle columns of the dataframe.
-    Looks for a trained encoder in the encoder_path and loads it if it exists. Otherwise it trains one.
-    This way we can easily use this function on deployment
+    Looks for a trained encoder, otherwise it trains one.
     :param data: pd.DataFrame
     :param encoder: MinMaxScaler
     :return data: pd.DataFrame, scaled dataframe

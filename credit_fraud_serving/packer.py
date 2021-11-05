@@ -13,7 +13,7 @@ with open('pickles/model.pkl', 'rb') as file:
 with open('pickles/encoder.pkl', 'rb') as file:
     encoder = pickle.load(file)
 
-# Pack the newly trained model artifact
+# Pack artifacts into the service instance
 fraud_classifier_service.pack('model', model)
 fraud_classifier_service.pack('encoder', encoder)
 

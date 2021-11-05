@@ -13,6 +13,8 @@ class FraudClassifier(BentoService):
 
     @api(input=DataframeInput(), batch=True)
     def predict(self, df: pd.DataFrame):
+        # Perform MinMaxScaling over the input data with the embedded encoder
         columns = df.columns[1:-1].to_list()
         df[columns] = self.artifacts.encoder.transform(df[columns])
+        # Make predictions
         return self.artifacts.model.predict(xgb.DMatrix(df))

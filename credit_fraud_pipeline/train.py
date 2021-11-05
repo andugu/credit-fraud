@@ -11,6 +11,7 @@ from sklearn.metrics import confusion_matrix, recall_score
 
 
 def get_confusion_coefs(y_actual, y_pred):
+    """  Returns the true positives rate & the true negatives rate for a set of y_real values and y_predicted values """
     cf = confusion_matrix(y_actual, y_pred)
     tnr = cf[0][0] / (cf[0][0]+cf[1][0])
     tpr = cf[1][1] / (cf[1][1]+cf[0][1])
@@ -18,7 +19,9 @@ def get_confusion_coefs(y_actual, y_pred):
 
 
 def optimize_classifier(train, init_points, n_iter, cv, stratified, shuffle, num_boost_round, balanced,
-                        scale_pos_weight):
+                        scale_pos_weight) -> dict:
+    """ Performs bayesian optimization over the most significant XGBoost parameters and returns the ones with
+    the highest score """
 
     bounds = {'max_depth': (4, 10),
               'reg_alpha': (0.0, 1),
@@ -112,6 +115,7 @@ def main():
     if scale_pos_weight is None:
         scale_pos_weight = labels.value_counts()[0]/labels.value_counts()[1]
 
+    # Split data in 3 sets
     x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=test_size, stratify=labels)
     x_test, x_val, y_test, y_val = train_test_split(x_test, y_test, test_size=val_size, stratify=y_test)
 
@@ -135,11 +139,13 @@ def main():
     test_score = model.eval(test_data)
     val_score = model.eval(val_data)
 
+    # Get test tpr, tnr & recall
     test_predictions = model.predict(test_data)
     test_predictions = np.round(test_predictions)
     test_tpr, test_tnr = get_confusion_coefs(y_test, test_predictions)
     test_recall = recall_score(y_test, test_predictions)
 
+    # Get val tpr, tnr & recall
     val_predictions = model.predict(val_data)
     val_predictions = np.round(val_predictions)
     val_tpr, val_tnr = get_confusion_coefs(y_val, val_predictions)
