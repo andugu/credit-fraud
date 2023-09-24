@@ -1,42 +1,64 @@
-# credit-fraud
+# 💳 Credit Fraud Detection
+This project implements a comprehensive solution for detecting credit card fraud using machine learning. It leverages the [Kaggle Credit Card Fraud Dataset](https://www.kaggle.com/mlg-ulb/creditcardfraud) to build an end-to-end pipeline for fraud detection.
 
-A simple python project based on [Kaagle's Credit Fraud Dataset](https://www.kaggle.com/mlg-ulb/creditcardfraud).
-This project implements a vertical pipeline over the dataset, from processing to the serving of the model.
-[DVC](https://github.com/iterative/dvc) is used for tracking, [BentoML](https://github.com/bentoml/BentoML) for serving,
-and the binary classifier is implemented with [XGBoost natives library](https://xgboost.readthedocs.io/en/latest/python/python_api.html).
+## Key Features
+- **Data Version Control (DVC):** We use [DVC](https://github.com/iterative/dvc) to efficiently manage and version control our dataset and model files. This ensures reproducibility and easy collaboration.
+- **Serving with BentoML:** Our model is deployed using [BentoML](https://github.com/bentoml/BentoML), a powerful framework for serving machine learning models. This allows for seamless integration into production environments.
+- **XGBoost Binary Classifier:** The heart of our fraud detection system is a binary classifier built using the [XGBoost native library](https://xgboost.readthedocs.io/en/latest/python/python_api.html), known for its high performance and accuracy.
 
-To run this project simply use: <br>
-`dvc repro` <br>
-The serving service is loaded by default on port 8000 of localhost .
-In order to run the service on a different port, use the following command once the pack stage has run: <br>
-` bentoml serve bentoml/FraudClassifier --port your_port_number`
+## Getting Started
+To run this project, follow these simple steps:
 
+1. Clone the repository:
+   ```
+   git clone https://github.com/andugu/credit-fraud.git
+   ```
+
+2. Install the required dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
+
+3. Use DVC to reproduce the pipeline:
+   ```
+   dvc repro
+   ```
+
+4. Start serving the model on the default port (8000) of localhost:
+   ```
+   bentoml serve bentoml/FraudClassifier --port 8000
+   ```
+   To run the service on a different port, simply replace `8000` with the desired port.
+
+## Project Workflow
 The DAG of the project is as follows:
 
-        +---------+    
-        | prepare |    
-        +---------+    
-             *         
-             *         
-             *         
-    +----------------+ 
-    | feature_engenc | 
-    +----------------+ 
-             *         
-             *         
-             *       
-         +-------+ 
-         | train |
-         +-------+
-             *         
-             *         
-             *       
-         +------+      
-         | pack |      
-         +------+      
-             *         
-             *         
-             *         
-        +-------+      
-        | serve |      
-        +-------+      
+```
++---------+    
+| Prepare |    
++---------+    
+     |         
+     |         
+     |         
++----------------+ 
+| Feature Engine | 
++----------------+ 
+     |         
+     |         
+     |       
+ +---------+ 
+ |  Train  |
+ +---------+
+     |         
+     |         
+     |       
+ +--------+      
+ |  Pack  |      
+ +--------+      
+     |         
+     |         
+     |         
++---------+      
+|  Serve  |      
++---------+      
+```
